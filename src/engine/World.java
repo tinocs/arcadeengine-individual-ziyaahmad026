@@ -3,7 +3,10 @@
  * Period 1, APCS
  * Date: Apr 10, 2026
  * 
- * Is this lab fully working? No If not, explain:
+ * Is this lab fully working? No If not, explain: Spent significant time trying to understand how to properly
+ * implement the act() method with the AnimationTimer. Still need to finish the methods in Actor, two of the methods
+ * in World, and test my code.
+ * 
  * If resubmitting, explain what was wrong and what you fixed. Resubmitting b/c I forgot to update the class comment headers
  */
 
