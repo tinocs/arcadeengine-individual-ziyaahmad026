@@ -3,17 +3,16 @@
  * Period 1, APCS
  * Date: Apr 13, 2026
  * 
- * Is this lab fully working? No If not, explain: Haven't yet tested my code.
+ * Is this lab fully working? Yes If not, explain: 
  * 
- * If resubmitting, explain what was wrong and what you fixed. Finished the
- * methods in Actor and two of the methods in World.
+ * If resubmitting, explain what was wrong and what you fixed. Resubmitted,
+ * finished testing all my code.
  */
 
-
-// https://docs.google.com/presentation/d/1hs-gURHR-FC5nuksjJQW8PzqXNj9kHJE8umMr8sOAY0/edit?slide=id.g3934f50146_0_23#slide=id.g3934f50146_0_23
 package engine;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,12 +40,39 @@ public abstract class World extends Pane {
 	private boolean widthSet;
 	private boolean heightSet;
 
+	public World() {
+		isRunning = false;
+		keyCodes = new HashSet<>();
+		widthSet = false;
+		heightSet = false;
+		
+		// listeners
+		widthProperty().addListener(new WidthListener());
+		heightProperty().addListener(new HeightListener());
+		sceneProperty().addListener(new SceneListener());
+		setOnKeyPressed(new KeyPressedHandler());
+		setOnKeyReleased(new KeyReleasedHandler());
+		
+		// animation timer
+		myTimer = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				act(now);
+				for (Actor actor: getObjects(Actor.class)) {
+					if (getObjects(Actor.class).contains(actor)) {
+						actor.act(now);
+					}
+				}
+			}
+		};
+	}
 
 	public World(boolean isRunning, Set<KeyCode> keyCodes, boolean widthSet, boolean heightSet) {
 		// initialize variables
 		this.isRunning = isRunning;
 		this.keyCodes = keyCodes;
 		this.widthSet = widthSet;
+		this.heightSet = heightSet;
 
 		// listeners
 		widthProperty().addListener(new WidthListener());
@@ -85,6 +111,7 @@ public abstract class World extends Pane {
 
 	public void add(Actor actor) {
 		getChildren().add(actor);
+		actor.addedToWorld();
 	}
 
 	public void remove(Actor actor) {
@@ -108,7 +135,7 @@ public abstract class World extends Pane {
 		List<A> list = new ArrayList<A>();
 		
 		for (Node child : getChildren()) {
-			if (cls.isInstance(child) && child.contains(x,y)) {
+			if (cls.isInstance(child) && child.getBoundsInParent().contains(x,y)) {
 				list.add(cls.cast(child));
 			}
 		}

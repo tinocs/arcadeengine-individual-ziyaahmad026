@@ -3,10 +3,10 @@
  * Period 1, APCS
  * Date: Apr 13, 2026
  * 
- * Is this lab fully working? No If not, explain: Haven't yet tested my code.
+ * Is this lab fully working? Yes If not, explain: 
  * 
- * If resubmitting, explain what was wrong and what you fixed. Finished the
- * methods in Actor and two of the methods in World.
+ * If resubmitting, explain what was wrong and what you fixed. Resubmitted,
+ * finished testing all my code.
  */
 
 package engine;
@@ -34,11 +34,12 @@ public abstract class Actor extends ImageView {
 	}
 
 	public double getWidth() {
-		return this.getBoundsInLocal().getWidth();
+		//return this.getBoundsInLocal().getWidth();
+		return this.getBoundsInParent().getWidth();
 	}
 	
 	public double getHeight() {
-		return this.getBoundsInLocal().getHeight();
+		return this.getBoundsInParent().getHeight();
 	}
 	
 	public <A extends Actor> java.util.List<A> getIntersectingObjects(java.lang.Class<A> cls) {
@@ -46,7 +47,7 @@ public abstract class Actor extends ImageView {
 		
 		// if actor isn't yet added to world
 		if (getWorld() == null) {
-			return null;
+			return list;
 		}
 		
 		for (A obj : getWorld().getObjects(cls)) {
@@ -63,7 +64,7 @@ public abstract class Actor extends ImageView {
 	
 	public <A extends Actor> A getOneIntersectingObject(Class<A> cls) {
 		List<A> list = getIntersectingObjects(cls);
-		if (list.isEmpty()) {
+		if (list == null || list.isEmpty()) {
 			return null;
 		}
 		return list.get(rand.nextInt(list.size()));
