@@ -1,24 +1,27 @@
 /**
  * Ziya Ahmad
  * Period 1, APCS
- * Date: Apr 10, 2026
+ * Date: Apr 13, 2026
  * 
- * Is this lab fully working? No If not, explain: Spent significant time trying to understand how to properly
- * implement the act() method with the AnimationTimer. Still need to finish the methods in Actor, two of the methods
- * in World, and test my code.
+ * Is this lab fully working? No If not, explain: Haven't yet tested my code.
  * 
- * If resubmitting, explain what was wrong and what you fixed. Resubmitting b/c I forgot to update the class comment headers
+ * If resubmitting, explain what was wrong and what you fixed. Finished the
+ * methods in Actor and two of the methods in World.
  */
+
 
 // https://docs.google.com/presentation/d/1hs-gURHR-FC5nuksjJQW8PzqXNj9kHJE8umMr8sOAY0/edit?slide=id.g3934f50146_0_23#slide=id.g3934f50146_0_23
 package engine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -89,15 +92,32 @@ public abstract class World extends Pane {
 	}
 
 	public <A extends Actor> java.util.List<A> getObjects(java.lang.Class<A> cls) {
-		return null;
+		List<A> list = new ArrayList<A>();
+		
+		for (Node child : getChildren()) {
+			if (cls.isInstance(child)) {
+				//list.add((A)(child));
+				list.add(cls.cast(child));
+			}
+		}
+		
+		return list;
 	}
 
 	public <A extends Actor> java.util.List<A> getObjectsAt(double x, double y, java.lang.Class<A> cls) {
-		return null;
+		List<A> list = new ArrayList<A>();
+		
+		for (Node child : getChildren()) {
+			if (cls.isInstance(child) && child.contains(x,y)) {
+				list.add(cls.cast(child));
+			}
+		}
+		
+		return list;
 	}
 
 	public boolean isKeyPressed(KeyCode code) {
-		return false;
+		return keyCodes.contains(code);
 	}
 
 	public abstract void onDimensionsInitialized();

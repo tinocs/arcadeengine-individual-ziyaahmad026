@@ -1,27 +1,32 @@
 /**
  * Ziya Ahmad
  * Period 1, APCS
- * Date: Apr 10, 2026
+ * Date: Apr 13, 2026
  * 
- * Is this lab fully working? No If not, explain: Spent significant time trying to understand how to properly
- * implement the act() method with the AnimationTimer. Still need to finish the methods in Actor, two of the methods
- * in World, and test my code.
+ * Is this lab fully working? No If not, explain: Haven't yet tested my code.
  * 
- * If resubmitting, explain what was wrong and what you fixed. Resubmitting b/c I forgot to update the class comment headers
+ * If resubmitting, explain what was wrong and what you fixed. Finished the
+ * methods in Actor and two of the methods in World.
  */
 
 package engine;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import javafx.scene.image.ImageView;
 
 public abstract class Actor extends ImageView {
+	private static final Random rand = new Random();
 	
 	public Actor() {
 		
 	}
 	
 	public void move(double dx, double dy) {
-		
+		setX(getX() + dx);
+		setY(getY() + dy);
 	}
 	
 	public World getWorld() {
@@ -29,19 +34,39 @@ public abstract class Actor extends ImageView {
 	}
 
 	public double getWidth() {
-		return 0;
+		return this.getBoundsInLocal().getWidth();
 	}
 	
 	public double getHeight() {
-		return 0;
+		return this.getBoundsInLocal().getHeight();
 	}
 	
-	public <A extends Actor> java.util.List<A> getIntersectingObject(java.lang.Class<A> cls) {
-		return null;
+	public <A extends Actor> java.util.List<A> getIntersectingObjects(java.lang.Class<A> cls) {
+		List<A> list = new ArrayList<>();
+		
+		// if actor isn't yet added to world
+		if (getWorld() == null) {
+			return null;
+		}
+		
+		for (A obj : getWorld().getObjects(cls)) {
+			// getboundsinparent -> gives positions relative to the world's coord system
+			// getboundsinlocla -> gives positions relative to each obj's own origin
+			if (obj != this && this.getBoundsInParent().intersects(obj.getBoundsInParent())) {
+				list.add(obj);
+			}
+			
+		}
+		
+		return list;
 	}
 	
 	public <A extends Actor> A getOneIntersectingObject(Class<A> cls) {
-		return null;
+		List<A> list = getIntersectingObjects(cls);
+		if (list.isEmpty()) {
+			return null;
+		}
+		return list.get(rand.nextInt(list.size()));
 	}
 	
 	public abstract void act(long now);
