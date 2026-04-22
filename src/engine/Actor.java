@@ -1,14 +1,14 @@
 /**
  * Ziya Ahmad
  * Period 1, APCS
- * Date: Apr 13, 2026
+ * Date: Apr 21, 2026
  * 
- * Is this lab fully working? Yes If not, explain: 
+ * Is this lab fully working? No If not, explain: Have made the Ball and BallWorld subclasses
+ * but still need to add the paddle behavior & need to fix bug with Ball staying in the BallWorld
+ * boundaries. Worked for ~40min on 4/21, would have spent longer but need to study for a math test tmrw :(
  * 
- * If resubmitting, explain what was wrong and what you fixed. Resubmitted,
- * finished testing all my code.
+ * If resubmitting, explain what was wrong and what you fixed.
  */
-
 package engine;
 
 import java.util.ArrayList;
