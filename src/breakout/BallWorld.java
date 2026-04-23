@@ -1,11 +1,9 @@
 /**
  * Ziya Ahmad
  * Period 1, APCS
- * Date: Apr 21, 2026
+ * Date: Apr 22, 2026
  * 
- * Is this lab fully working? No If not, explain: Have made the Ball and BallWorld subclasses
- * but still need to add the paddle behavior & need to fix bug with Ball staying in the BallWorld
- * boundaries. Worked for ~40min on 4/21, would have spent longer but need to study for a math test tmrw :(
+ * Is this lab fully working? No If not, explain: 
  * 
  * If resubmitting, explain what was wrong and what you fixed.
  */
@@ -15,18 +13,22 @@ import engine.World;
 
 public class BallWorld extends World {
 	
-	public BallWorld() { // why doesnt this work?
-		setWidth(600);
-		setHeight(800);
-		
-		
+	public BallWorld() {
+		setPrefWidth(600);
+		setPrefHeight(800);
 	}
 
 	@Override
 	public void onDimensionsInitialized() {
 		Ball ball = new Ball();
+		ball.setX(getWidth() / 2 - ball.getWidth()/2);
+		ball.setY(getHeight() / 2 - ball.getHeight() / 2);
 		add(ball);
 		
+		Paddle paddle = new Paddle();
+		paddle.setX(getWidth() / 2 - paddle.getWidth() / 2);
+		paddle.setY(getHeight() / 4 - paddle.getHeight() / 2);
+		add(paddle);
 	}
 
 	@Override
