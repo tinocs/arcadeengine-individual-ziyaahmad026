@@ -3,9 +3,11 @@
  * Period 1, APCS
  * Date: Apr 22, 2026
  * 
- * Is this lab fully working? No If not, explain: 
+ * Is this lab fully working? Yes If not, explain: 
  * 
  * If resubmitting, explain what was wrong and what you fixed.
+ * Resubmitted, added Paddle, Brick, & Score subclasses. Also fixed
+ * the bug relating to the ball staying in the World's boundaries.
  */
 package breakout;
 
@@ -14,6 +16,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
 public class BallWorld extends World {
+	private Score score;
 	
 	public BallWorld() {
 		setPrefWidth(800);
@@ -46,11 +49,20 @@ public class BallWorld extends World {
 		brick.setX(getWidth() / 2 - brick.getWidth() / 2);
 		brick.setY(getHeight() * 3 / 4 - brick.getHeight() / 2);
 		add(brick);
+		
+		score = new Score();
+		score.setX(getWidth() / 2);
+		score.setY(getHeight() * 9 / 10);
+		getChildren().add(score);
 	}
 
 	@Override
 	public void act(long now) {
 		
+	}
+	
+	public Score getScore() {
+		return score;
 	}
 
 }

@@ -3,9 +3,11 @@
  * Period 1, APCS
  * Date: Apr 22, 2026
  * 
- * Is this lab fully working? No If not, explain: 
+ * Is this lab fully working? Yes If not, explain: 
  * 
  * If resubmitting, explain what was wrong and what you fixed.
+ * Resubmitted, added Paddle, Brick, & Score subclasses. Also fixed
+ * the bug relating to the ball staying in the World's boundaries.
  */
 package breakout;
 
@@ -35,6 +37,7 @@ public class Ball extends Actor {
 	
 	@Override
 	public void act(long now) {
+		Score score = ((BallWorld)getWorld()).getScore();
 		move(dx,dy);
 		
 		//bounce off world edges
@@ -43,6 +46,9 @@ public class Ball extends Actor {
 		}
 		
 		if (getY() <= 0 || getY() + ballH >= getWorld().getHeight()) {
+			if (!(getY() <= 0)) { // - 1000 when ball hits floor
+				score.setScore(score.getScore() - 1000);
+			}
 			dy *=-1;
 		}
 		
@@ -54,6 +60,9 @@ public class Ball extends Actor {
 		// bounce off brick
 		Brick potentialBrick = getOneIntersectingObject(Brick.class);
 		if (potentialBrick != null) {
+			// + 100 when ball hits brick
+			score.setScore(score.getScore() + 100);
+			
 			double leftX = potentialBrick.getX() - potentialBrick.getWidth() / 2;
 			double rightX = potentialBrick.getX() + potentialBrick.getWidth() / 2;
 			double upY = potentialBrick.getY() + potentialBrick.getHeight() / 2;
