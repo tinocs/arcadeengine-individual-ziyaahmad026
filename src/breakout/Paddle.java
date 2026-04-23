@@ -10,9 +10,10 @@
 package breakout;
 import engine.Actor;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 
 public class Paddle extends Actor {
-
+	
 	public Paddle() {
 		// set image to the paddle
 		String path = getClass().getClassLoader().getResource("breakoutresources/paddle.png").toString();
@@ -22,7 +23,12 @@ public class Paddle extends Actor {
 
 	@Override
 	public void act(long now) {
-
+		// if both keys are pressed, prioritize the left key
+		if (getWorld().isKeyPressed(KeyCode.LEFT)) {
+			move(-3.5,0);
+		} else if (getWorld().isKeyPressed(KeyCode.RIGHT)) {
+			move(3.5,0);
+		}
 	}
 
 }
