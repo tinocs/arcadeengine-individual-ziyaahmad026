@@ -46,8 +46,27 @@ public class Ball extends Actor {
 			dy *=-1;
 		}
 		
+		// bounce off paddle
 		if (getOneIntersectingObject(Paddle.class) != null) {
 			dy *= -1;
+		}
+		
+		// bounce off brick
+		Brick potentialBrick = getOneIntersectingObject(Brick.class);
+		if (potentialBrick != null) {
+			double leftX = potentialBrick.getX() - potentialBrick.getWidth() / 2;
+			double rightX = potentialBrick.getX() + potentialBrick.getWidth() / 2;
+			double upY = potentialBrick.getY() + potentialBrick.getHeight() / 2;
+			double downY = potentialBrick.getY() - potentialBrick.getHeight() / 2;
+			
+			if (leftX < getX() && getX() < rightX) {
+				dy *= -1;
+			} else if (downY < getY() && getY() < upY) {
+				dx *= -1;
+			} else {
+				dy *= -1;
+				dx *= -1;
+			}
 		}
 	}
 

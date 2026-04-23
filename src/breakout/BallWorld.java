@@ -36,9 +36,16 @@ public class BallWorld extends World {
 		this.setOnMouseMoved(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				paddle.setX(event.getX());
+				if (event.getX() >= paddle.getWidth() / 2 && event.getX() <= getWidth() - paddle.getWidth() / 2) {					
+					paddle.setX(event.getX() - paddle.getWidth()/2);
+				}
 			}
 		});
+		
+		Brick brick = new Brick();
+		brick.setX(getWidth() / 2 - brick.getWidth() / 2);
+		brick.setY(getHeight() * 3 / 4 - brick.getHeight() / 2);
+		add(brick);
 	}
 
 	@Override
