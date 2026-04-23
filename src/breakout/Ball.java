@@ -1,11 +1,15 @@
 /**
  * Ziya Ahmad
  * Period 1, APCS
- * Date: Apr 22, 2026
+ * Date: Apr 23, 2026
  * 
  * Is this lab fully working? Yes If not, explain: 
  * 
  * If resubmitting, explain what was wrong and what you fixed.
+ * Forgot to delete the Brick from the World when it touches a Ball.
+ * Also I accidentally put the Paddle at the top of the world because
+ * I haven't played this game before.
+ * 
  * Resubmitted, added Paddle, Brick, & Score subclasses. Also fixed
  * the bug relating to the ball staying in the World's boundaries.
  */
@@ -23,8 +27,8 @@ public class Ball extends Actor {
 	double ballH;
 	
 	public Ball() {
-		dx = 4.5;
-		dy = 4.5;
+		dx = 5.0;
+		dy = 5.0;
 		
 		// set image to the ball
 		String path = getClass().getClassLoader().getResource("breakoutresources/ball.png").toString();
@@ -76,6 +80,8 @@ public class Ball extends Actor {
 				dy *= -1;
 				dx *= -1;
 			}
+			
+			getWorld().getChildren().remove(potentialBrick);
 		}
 	}
 

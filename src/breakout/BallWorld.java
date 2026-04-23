@@ -1,11 +1,15 @@
 /**
  * Ziya Ahmad
  * Period 1, APCS
- * Date: Apr 22, 2026
+ * Date: Apr 23, 2026
  * 
  * Is this lab fully working? Yes If not, explain: 
  * 
  * If resubmitting, explain what was wrong and what you fixed.
+ * Forgot to delete the Brick from the World when it touches a Ball.
+ * Also I accidentally put the Paddle at the top of the world because
+ * I haven't played this game before.
+ * 
  * Resubmitted, added Paddle, Brick, & Score subclasses. Also fixed
  * the bug relating to the ball staying in the World's boundaries.
  */
@@ -33,7 +37,7 @@ public class BallWorld extends World {
 		
 		Paddle paddle = new Paddle();
 		paddle.setX(getWidth() / 2 - paddle.getWidth() / 2);
-		paddle.setY(getHeight() / 4 - paddle.getHeight() / 2);
+		paddle.setY(getHeight() * 3 / 4 - paddle.getHeight() / 2);
 		add(paddle);
 		
 		this.setOnMouseMoved(new EventHandler<MouseEvent>() {
@@ -45,10 +49,19 @@ public class BallWorld extends World {
 			}
 		});
 		
-		Brick brick = new Brick();
-		brick.setX(getWidth() / 2 - brick.getWidth() / 2);
-		brick.setY(getHeight() * 3 / 4 - brick.getHeight() / 2);
-		add(brick);
+		Brick brick1 = new Brick();
+		double x = getWidth() / 2 - brick1.getWidth() / 2 - brick1.getWidth() - brick1.getWidth() * 3;
+		double y = getHeight() / 4 - brick1.getHeight() / 2;
+		
+		for (int i = 0; i < 3; i++) {
+			Brick b = new Brick();
+			b.setX(x);
+			b.setY(y);
+			add(b);
+			
+			x += b.getWidth();
+			y += b.getHeight();
+		}
 		
 		score = new Score();
 		score.setX(getWidth() / 2);
