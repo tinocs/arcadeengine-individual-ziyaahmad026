@@ -48,23 +48,20 @@ public class Breakout extends Application {
 		titleRoot.setPrefWidth(800);
 
 		titleRoot.setAlignment(Pos.CENTER);
-
-		// game
-		BorderPane levelRoot = new BorderPane();
-
 		Scene scene1 = new Scene(titleRoot);
-		//BallWorld world = new BallWorld(new File("level1.txt"), new File ("level2.txt"), stage, scene1);
-		BallWorld world = new BallWorld(new File("test1.txt"), new File ("test2.txt"), stage, scene1);
 		
-		levelRoot.setCenter(world);
-
-		Scene scene2 = new Scene(levelRoot);
+		// game
 		playBtn.setOnMousePressed(e -> {
-			stage.setScene(scene2);
+			BorderPane levelRoot = new BorderPane();
+			//BallWorld world = new BallWorld(new File("level1.txt"), new File ("level2.txt"), stage, scene1);
+			BallWorld world = new BallWorld(new File("level2.txt"), new File ("level2.txt"), stage, scene1);
+			levelRoot.setCenter(world);
+		    Scene scene2 = new Scene(levelRoot);
+		    world.start();
+		    stage.setScene(scene2);
 		});
 		stage.setScene(scene1);
 
-		world.start();
 		stage.show();
 	}
 

@@ -12,6 +12,7 @@ import engine.Actor;
 import javafx.scene.image.Image;
 
 public class Brick extends Actor {
+	boolean isFading;
 
 	public Brick() {
 		String path = getClass().getClassLoader().getResource("breakoutresources/brick.png").toString();
@@ -34,5 +35,13 @@ public class Brick extends Actor {
 	@Override
 	public void act(long now) {
 		
+	}
+	
+	public boolean isFading() {
+		return isFading;
+	}
+	
+	public void setIsFading(boolean k) {
+		isFading = k;
 	}
 }

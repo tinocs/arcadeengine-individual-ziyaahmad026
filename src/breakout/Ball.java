@@ -10,15 +10,22 @@
 package breakout;
 
 import engine.Actor;
+import engine.Sound;
+import javafx.animation.FadeTransition;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 
 public class Ball extends Actor {
 
-	double dx;
-	double dy;
+	private double dx;
+	private double dy;
 	
-	double ballW;
-	double ballH;
+	private double ballW;
+	private double ballH;
+	
+	private Sound ball_bounce = new Sound("ballbounceresources/ball_bounce.wav");
+	private Sound brick_hit = new Sound("ballbounceresources/brick_hit.wav");
+	private Sound lose_life = new Sound("ballbounceresources/lose_life.wav");
 	
 	public Ball() {
 		dx = 5.0;
@@ -48,16 +55,21 @@ public class Ball extends Actor {
 			//bounce off world edges
 			if (getX() <= 0 || getX() + ballW >= getWorld().getWidth()) {
 				dx *=-1;
+				ball_bounce.play();
 			}
 			
 			if (getY() <= 0 || getY() + ballH >= getWorld().getHeight()) {
 				if (!(getY() <= 0)) { // - 1000 when ball hits floor
 					((BallWorld)getWorld()).setLives(lives - 1); // inc lives
+					lose_life.play();
+					
 					score.setScore(score.getScore() - 1000); // inc score
 					
 					setX(getWorld().getWidth() / 2 - ballW/2); // move to the center
 					setY(getWorld().getHeight() / 2 - ballH/2);
 					((BallWorld)getWorld()).setIsPaused(true); // pause game
+				} else {
+					ball_bounce.play();
 				}
 				dy *=-1;
 			}
@@ -65,11 +77,12 @@ public class Ball extends Actor {
 			// bounce off paddle
 			if (getOneIntersectingObject(Paddle.class) != null) {
 				dy *= -1;
+				ball_bounce.play();
 			}
 			
 			// bounce off brick
 			Brick potentialBrick = getOneIntersectingObject(Brick.class);
-			if (potentialBrick != null) {
+			if (potentialBrick != null && !potentialBrick.isFading()) {
 				// + 100 when ball hits brick
 				score.setScore(score.getScore() + 100);
 				
@@ -87,7 +100,16 @@ public class Ball extends Actor {
 					dx *= -1;
 				}
 				
-				getWorld().getChildren().remove(potentialBrick);
+				brick_hit.play();
+				
+				FadeTransition fade = new FadeTransition(new Duration(300), potentialBrick);
+				fade.setFromValue(1.0);
+				fade.setToValue(0.0);
+				fade.play();
+				fade.setOnFinished((e) ->{
+					getWorld().getChildren().remove(potentialBrick);
+					
+				});
 			}
 		}
 		

@@ -13,12 +13,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import engine.Sound;
 import engine.World;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -35,7 +41,10 @@ public class BallWorld extends World {
 	private Label livesLbl;
 	private boolean isPaused = true;
 	private Label pauseLbl = new Label("Press SPACE to start.");
-
+	private Sound game_lost = new Sound("ballbounceresources/game_lost.wav");
+	private Sound game_won = new Sound("ballbounceresources/game_won.wav");
+	private boolean gameOverSoundPlayed = false;
+	
 
 	public BallWorld() {
 		setPrefWidth(800);
@@ -47,11 +56,11 @@ public class BallWorld extends World {
 		setPrefWidth(800);
 		setPrefHeight(600);
 
-		pauseLbl.setFont(new Font("Algerian", 30));
+		pauseLbl.setFont(new Font("Algerian", 40));
+		pauseLbl.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 		pauseLbl.setLayoutX(220);
 	    pauseLbl.setLayoutY(270);
 	    
-		
 		this.level1 = level1;
 		this.level2 = level2;
 		this.stage = stage;
@@ -117,7 +126,12 @@ public class BallWorld extends World {
 		}
 		
 		if (lives == 0) { // if we lost all lives go to menu
+			if (!gameOverSoundPlayed) {
+				game_lost.play();	
+				gameOverSoundPlayed = true;
+			}
 			stage.setScene(titleScene);
+			stop();
 		}
 		
 		// check if we are done with this level
@@ -127,7 +141,12 @@ public class BallWorld extends World {
 				loadBricks(level2); // load next level
 			} else if (level == 3) {
 				// if we're done w/ all levels go to menu
+				if (!gameOverSoundPlayed) {					
+					game_won.play();
+					gameOverSoundPlayed = true;
+				}
 				stage.setScene(titleScene);
+				stop();
 			}
 		}
 	}
@@ -141,8 +160,10 @@ public class BallWorld extends World {
 
 		try {
 			Scanner s = new Scanner(file);
+			
 			int totalRows = s.nextInt();
 			int totalCols = s.nextInt();
+			
 			for (int row = 0; row < totalRows; row ++) {
 				for (int col = 0; col < totalCols; col++) {
 					int num = s.nextInt();
