@@ -6,7 +6,8 @@
  * Is this lab fully working? Yes If not, explain: 
  * 
  * If resubmitting, explain what was wrong and what you fixed.
- */package breakout;
+ */
+package breakout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,7 +16,9 @@ import java.util.Scanner;
 import engine.World;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class BallWorld extends World {
@@ -26,6 +29,8 @@ public class BallWorld extends World {
 	private Stage stage;
 	private Scene titleScene;
 	private boolean bricksLoaded = false;
+	private int lives = 3;
+	private Label livesLbl;
 
 	
 	public BallWorld() {
@@ -106,10 +111,20 @@ public class BallWorld extends World {
 		score.setX(getWidth() / 2);
 		score.setY(getHeight() * 9 / 10);
 		getChildren().add(score);
+		
+		livesLbl = new Label("Lives: " +lives);
+		livesLbl.setFont(new Font("Algerian", 25));
+		livesLbl.setLayoutX(10);
+		livesLbl.setLayoutY(10);
+		getChildren().add(livesLbl);
+		
 	}
 
 	@Override
 	public void act(long now) {
+		if (lives == 0) {
+			stage.setScene(titleScene);
+		}
 		if (bricksLoaded && getObjects(Brick.class).isEmpty()) {
 			level++;
 			if (level == 2) {
@@ -154,6 +169,15 @@ public class BallWorld extends World {
 			}
 		}
 
+	}
+	
+	public int getLives() {
+		return lives;
+	}
+	
+	public void setLives(int i) {
+		lives = i;
+		livesLbl.setText("Lives: "+i);
 	}
 	
 	public Score getScore() {

@@ -36,6 +36,8 @@ public class Ball extends Actor {
 	@Override
 	public void act(long now) {
 		Score score = ((BallWorld)getWorld()).getScore();
+		int lives = ((BallWorld)getWorld()).getLives();
+		
 		if (score == null) {
 			return;
 		}
@@ -48,6 +50,7 @@ public class Ball extends Actor {
 		
 		if (getY() <= 0 || getY() + ballH >= getWorld().getHeight()) {
 			if (!(getY() <= 0)) { // - 1000 when ball hits floor
+				((BallWorld)getWorld()).setLives(lives - 1);
 				score.setScore(score.getScore() - 1000);
 			}
 			dy *=-1;
