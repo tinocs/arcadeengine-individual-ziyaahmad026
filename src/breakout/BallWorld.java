@@ -1,31 +1,46 @@
 /**
  * Ziya Ahmad
  * Period 1, APCS
- * Date: Apr 23, 2026
+ * Date: Apr 26, 2026
  * 
  * Is this lab fully working? Yes If not, explain: 
  * 
  * If resubmitting, explain what was wrong and what you fixed.
- * Forgot to delete the Brick from the World when it touches a Ball.
- * Also I accidentally put the Paddle at the top of the world because
- * I haven't played this game before.
- * 
- * Resubmitted, added Paddle, Brick, & Score subclasses. Also fixed
- * the bug relating to the ball staying in the World's boundaries.
- */
-package breakout;
+ */package breakout;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import engine.World;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 public class BallWorld extends World {
 	private Score score;
+	private File level1;
+	private File level2;
+	private int level = 1;
+	private Stage stage;
+	private Scene titleScene;
+	private boolean bricksLoaded = false;
+
 	
 	public BallWorld() {
 		setPrefWidth(800);
 		setPrefHeight(600);
+	}
+	
+	public BallWorld(File level1, File level2, Stage stage, Scene titleScene) {
+		setPrefWidth(800);
+		setPrefHeight(600);
 		
+		this.level1 = level1;
+		this.level2 = level2;
+		this.stage = stage;
+	    this.titleScene = titleScene;
 	}
 
 	@Override
@@ -37,7 +52,7 @@ public class BallWorld extends World {
 		
 		Paddle paddle = new Paddle();
 		paddle.setX(getWidth() / 2 - paddle.getWidth() / 2);
-		paddle.setY(getHeight() * 3 / 4 - paddle.getHeight() / 2);
+		paddle.setY(getHeight() * 5 / 6 - paddle.getHeight() / 2);
 		add(paddle);
 		
 		this.setOnMouseMoved(new EventHandler<MouseEvent>() {
@@ -49,18 +64,42 @@ public class BallWorld extends World {
 			}
 		});
 		
-		Brick brick1 = new Brick();
-		double x = getWidth() / 2 - brick1.getWidth() / 2 - brick1.getWidth() - brick1.getWidth() * 3;
-		double y = getHeight() / 4 - brick1.getHeight() / 2;
-		
-		for (int i = 0; i < 3; i++) {
-			Brick b = new Brick();
-			b.setX(x);
-			b.setY(y);
-			add(b);
+		if (level1 != null) {
+			double startX = 0;
+			double startY = 0;
+			Brick brick1 = new Brick();
+			double brickW = brick1.getWidth();
+			double brickH = brick1.getHeight();
 			
-			x += b.getWidth();
-			y += b.getHeight();
+			try {
+				Scanner s = new Scanner(level1);
+				int totalRows = s.nextInt();
+				int totalCols = s.nextInt();
+				for (int row = 0; row < totalRows; row ++) {
+					for (int col = 0; col < totalCols; col++) {
+						int num = s.nextInt();
+						if (num == 1) {
+							Brick b = new Brick(false);
+							b.setX(startX);
+							b.setY(startY);
+							add(b);
+						} else if (num == 2) {
+							Brick b = new Brick(true);
+							b.setX(startX);
+							b.setY(startY);
+							add(b);
+						}
+						startX += brickW;
+					}
+					startX = 0;
+					startY += brickH;
+				}
+				s.close();
+				bricksLoaded = true;
+			} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+			
 		}
 		
 		score = new Score();
@@ -71,11 +110,53 @@ public class BallWorld extends World {
 
 	@Override
 	public void act(long now) {
-		
+		if (bricksLoaded && getObjects(Brick.class).isEmpty()) {
+			level++;
+			if (level == 2) {
+				if (level2 != null) {
+					double startX = 0;
+					double startY = 0;
+					Brick brick1 = new Brick();
+					double brickW = brick1.getWidth();
+					double brickH = brick1.getHeight();
+					
+					try {
+						Scanner s = new Scanner(level2);
+						int totalRows = s.nextInt();
+						int totalCols = s.nextInt();
+						for (int row = 0; row < totalRows; row ++) {
+							for (int col = 0; col < totalCols; col++) {
+								int num = s.nextInt();
+								if (num == 1) {
+									Brick b = new Brick(false);
+									b.setX(startX);
+									b.setY(startY);
+									add(b);
+								} else if (num == 2) {
+									Brick b = new Brick(true);
+									b.setX(startX);
+									b.setY(startY);
+									add(b);
+								}
+								startX += brickW;
+							}
+							startX = 0;
+							startY += brickH;
+						}
+						s.close();
+					} catch (FileNotFoundException e) {
+						System.out.println(e.getMessage());
+					}
+					
+				}
+			} else if (level == 3) {
+				stage.setScene(titleScene);
+			}
+		}
+
 	}
 	
 	public Score getScore() {
 		return score;
 	}
-
 }
