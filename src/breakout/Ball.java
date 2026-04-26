@@ -41,48 +41,56 @@ public class Ball extends Actor {
 		if (score == null) {
 			return;
 		}
-		move(dx,dy);
 		
-		//bounce off world edges
-		if (getX() <= 0 || getX() + ballW >= getWorld().getWidth()) {
-			dx *=-1;
-		}
-		
-		if (getY() <= 0 || getY() + ballH >= getWorld().getHeight()) {
-			if (!(getY() <= 0)) { // - 1000 when ball hits floor
-				((BallWorld)getWorld()).setLives(lives - 1);
-				score.setScore(score.getScore() - 1000);
-			}
-			dy *=-1;
-		}
-		
-		// bounce off paddle
-		if (getOneIntersectingObject(Paddle.class) != null) {
-			dy *= -1;
-		}
-		
-		// bounce off brick
-		Brick potentialBrick = getOneIntersectingObject(Brick.class);
-		if (potentialBrick != null) {
-			// + 100 when ball hits brick
-			score.setScore(score.getScore() + 100);
+		if (!((BallWorld)getWorld()).isPaused()) {
+			move(dx,dy);
 			
-			double leftX = potentialBrick.getX() - potentialBrick.getWidth() / 2;
-			double rightX = potentialBrick.getX() + potentialBrick.getWidth() / 2;
-			double upY = potentialBrick.getY() + potentialBrick.getHeight() / 2;
-			double downY = potentialBrick.getY() - potentialBrick.getHeight() / 2;
-			
-			if (leftX < getX() && getX() < rightX) {
-				dy *= -1;
-			} else if (downY < getY() && getY() < upY) {
-				dx *= -1;
-			} else {
-				dy *= -1;
-				dx *= -1;
+			//bounce off world edges
+			if (getX() <= 0 || getX() + ballW >= getWorld().getWidth()) {
+				dx *=-1;
 			}
 			
-			getWorld().getChildren().remove(potentialBrick);
+			if (getY() <= 0 || getY() + ballH >= getWorld().getHeight()) {
+				if (!(getY() <= 0)) { // - 1000 when ball hits floor
+					((BallWorld)getWorld()).setLives(lives - 1); // inc lives
+					score.setScore(score.getScore() - 1000); // inc score
+					
+					setX(getWorld().getWidth() / 2 - ballW/2); // move to the center
+					setY(getWorld().getHeight() / 2 - ballH/2);
+					((BallWorld)getWorld()).setIsPaused(true); // pause game
+				}
+				dy *=-1;
+			}
+			
+			// bounce off paddle
+			if (getOneIntersectingObject(Paddle.class) != null) {
+				dy *= -1;
+			}
+			
+			// bounce off brick
+			Brick potentialBrick = getOneIntersectingObject(Brick.class);
+			if (potentialBrick != null) {
+				// + 100 when ball hits brick
+				score.setScore(score.getScore() + 100);
+				
+				double leftX = potentialBrick.getX() - potentialBrick.getWidth() / 2;
+				double rightX = potentialBrick.getX() + potentialBrick.getWidth() / 2;
+				double upY = potentialBrick.getY() + potentialBrick.getHeight() / 2;
+				double downY = potentialBrick.getY() - potentialBrick.getHeight() / 2;
+				
+				if (leftX < getX() && getX() < rightX) {
+					dy *= -1;
+				} else if (downY < getY() && getY() < upY) {
+					dx *= -1;
+				} else {
+					dy *= -1;
+					dx *= -1;
+				}
+				
+				getWorld().getChildren().remove(potentialBrick);
+			}
 		}
+		
 	}
 
 }

@@ -55,7 +55,7 @@ public class Breakout extends Application {
 		Scene scene1 = new Scene(titleRoot);
 		//BallWorld world = new BallWorld(new File("level1.txt"), new File ("level2.txt"), stage, scene1);
 		BallWorld world = new BallWorld(new File("test1.txt"), new File ("test2.txt"), stage, scene1);
-
+		
 		levelRoot.setCenter(world);
 
 		Scene scene2 = new Scene(levelRoot);

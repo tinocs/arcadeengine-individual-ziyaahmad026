@@ -23,16 +23,18 @@ public class Paddle extends Actor {
 
 	@Override
 	public void act(long now) {
-		// if both keys are pressed, prioritize the left key
-	    if (getWorld().isKeyPressed(KeyCode.LEFT)) {
-	        if (getX() > 0) {
-	            move(-7.5, 0);
-	        }
-	    } else if (getWorld().isKeyPressed(KeyCode.RIGHT)) {
-	        if (getX() + getWidth() < getWorld().getWidth()) {
-	            move(7.5, 0);
-	        }
-	    }
+		if (!((BallWorld)getWorld()).isPaused()) {
+			// if both keys are pressed, prioritize the left key
+		    if (getWorld().isKeyPressed(KeyCode.LEFT)) {
+		        if (getX() > 0) {
+		            move(-7.5, 0);
+		        }
+		    } else if (getWorld().isKeyPressed(KeyCode.RIGHT)) {
+		        if (getX() + getWidth() < getWorld().getWidth()) {
+		            move(7.5, 0);
+		        }
+		    }
+			
+		}
 	}
-
 }
