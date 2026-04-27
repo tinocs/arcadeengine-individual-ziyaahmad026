@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 
 public class Paddle extends Actor {
-	
 	public Paddle() {
 		// set image to the paddle
 		String path = getClass().getClassLoader().getResource("breakoutresources/paddle.png").toString();
@@ -26,12 +25,18 @@ public class Paddle extends Actor {
 		if (!((BallWorld)getWorld()).isPaused()) {
 			// if both keys are pressed, prioritize the left key
 		    if (getWorld().isKeyPressed(KeyCode.LEFT)) {
-		        if (getX() > 0) {
-		            move(-7.5, 0);
+		    	if (getX() > getWorld().getScene().getX() + getWorld().getScene().getWidth()/2) {
+			    	((BallWorld)getWorld()).scroll(-12);	
+		    	}
+		    	if (getX() > 0) {
+		            move(-12.0, 0);
 		        }
 		    } else if (getWorld().isKeyPressed(KeyCode.RIGHT)) {
-		        if (getX() + getWidth() < getWorld().getWidth()) {
-		            move(7.5, 0);
+		    	if (getX() < getWorld().getScene().getX() + getWorld().getScene().getWidth()/2) {
+			    	((BallWorld)getWorld()).scroll(12);		
+		    	}
+		    	if (getX() + getWidth() < getWorld().getWidth()) {
+		            move(12.0, 0);
 		        }
 		    }
 			

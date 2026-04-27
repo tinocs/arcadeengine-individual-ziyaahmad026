@@ -13,18 +13,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import engine.Actor;
 import engine.Sound;
 import engine.World;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -33,38 +34,65 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class BallWorld extends World {
-	private Ball ball;
-	private Score score;
 	private File level1;
 	private File level2;
-	private int level = 1;
+	
 	private Stage stage;
 	private Scene titleScene;
+	private Ball ball;
+	private Score score;
+	
+	private ImageView imgv;
+	private Image img;
+	
 	private boolean bricksLoaded = false;
 	private int lives = 3;
+	private int level = 1;
+	
 	private Label livesLbl;
-	private boolean isPaused = true;
 	private Label pauseLbl = new Label("Press SPACE to start.");
+	
 	private Sound game_lost = new Sound("ballbounceresources/game_lost.wav");
 	private Sound game_won = new Sound("ballbounceresources/game_won.wav");
+	
 	private boolean gameOverSoundPlayed = false;
+	private boolean isPaused = true;
 	
 
-	public BallWorld() {
+	public BallWorld() {		
 		setPrefWidth(800);
 		setPrefHeight(600);
 		pauseLbl.setFont(new Font("Algerian", 30));
+		
+		// background
+		String path = getClass().getClassLoader().getResource("breakoutresources/background.png").toString();
+		img = new Image(path);
+		imgv = new ImageView(img);
+		imgv.setY(0);
+		imgv.setX((800 - img.getWidth()) / 2);
+		getChildren().add(imgv);
+
 	}
 
 	public BallWorld(File level1, File level2, Stage stage, Scene titleScene) {
 		setPrefWidth(800);
 		setPrefHeight(600);
+		
+		// background
+		String path = getClass().getClassLoader().getResource("breakoutresources/background.png").toString();
+		img = new Image(path);
+		imgv = new ImageView(img);
+		imgv.setY(0);
+		imgv.setX((800 - img.getWidth()) / 2);
+		getChildren().add(imgv);
 
+		// pauselbl
 		pauseLbl.setFont(new Font("Algerian", 40));
 		pauseLbl.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 		pauseLbl.setLayoutX(220);
 	    pauseLbl.setLayoutY(270);
 	    
+	    // other vars
 		this.level1 = level1;
 		this.level2 = level2;
 		this.stage = stage;
@@ -86,16 +114,16 @@ public class BallWorld extends World {
 		add(paddle);
 
 		// move paddle w/ mouse
-		this.setOnMouseMoved(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				if (!isPaused()) {
-					if (event.getX() >= paddle.getWidth() / 2 && event.getX() <= getWidth() - paddle.getWidth() / 2) {					
-						paddle.setX(event.getX() - paddle.getWidth()/2);
-					}					
-				}
-			}
-		});
+//		this.setOnMouseMoved(new EventHandler<MouseEvent>() {
+//			@Override
+//			public void handle(MouseEvent event) {
+//				if (!isPaused()) {
+//					if (event.getX() >= paddle.getWidth() / 2 && event.getX() <= getWidth() - paddle.getWidth() / 2) {					
+//						paddle.setX(event.getX() - paddle.getWidth()/2);
+//					}					
+//				}
+//			}
+//		});
 
 		// show score
 		score = new Score();
@@ -165,6 +193,15 @@ public class BallWorld extends World {
 				stage.setScene(titleScene);
 				
 			}
+		}
+	}
+
+	public void scroll(double dx) {
+		if (imgv.getX() - dx >= getWidth() - img.getWidth() && imgv.getX() - dx <= 0) {
+			for (Actor actor : getObjects(Actor.class)) {
+				actor.setX(actor.getX() - dx);
+			}
+			imgv.setX(imgv.getX() - dx);			
 		}
 	}
 
