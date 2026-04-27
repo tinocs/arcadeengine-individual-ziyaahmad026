@@ -55,6 +55,7 @@ public class Ball extends Actor {
 			//bounce off world edges
 			if (getX() <= 0 || getX() + ballW >= getWorld().getWidth()) {
 				dx *=-1;
+				stopSounds();
 				ball_bounce.play();
 			}
 			
@@ -69,6 +70,7 @@ public class Ball extends Actor {
 					setY(getWorld().getHeight() / 2 - ballH/2);
 					((BallWorld)getWorld()).setIsPaused(true); // pause game
 				} else {
+					stopSounds();
 					ball_bounce.play();
 				}
 				dy *=-1;
@@ -77,6 +79,7 @@ public class Ball extends Actor {
 			// bounce off paddle
 			if (getOneIntersectingObject(Paddle.class) != null) {
 				dy *= -1;
+				stopSounds();
 				ball_bounce.play();
 			}
 			
@@ -100,6 +103,7 @@ public class Ball extends Actor {
 					dx *= -1;
 				}
 				
+				stopSounds();
 				brick_hit.play();
 				
 				FadeTransition fade = new FadeTransition(new Duration(300), potentialBrick);
@@ -112,7 +116,13 @@ public class Ball extends Actor {
 				});
 			}
 		}
-		
+	}
+	
+	public void stopSounds() {
+		// prevents overlapping sounds
+	    ball_bounce.stop();
+	    brick_hit.stop();
+	    lose_life.stop();
 	}
 
 }

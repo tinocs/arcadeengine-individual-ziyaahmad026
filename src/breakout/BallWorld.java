@@ -15,9 +15,13 @@ import java.util.Scanner;
 
 import engine.Sound;
 import engine.World;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
@@ -129,9 +133,16 @@ public class BallWorld extends World {
 			if (!gameOverSoundPlayed) {
 				game_lost.play();	
 				gameOverSoundPlayed = true;
+				
 			}
-			stage.setScene(titleScene);
 			stop();
+			Platform.runLater(() -> {
+		        Alert a = new Alert(AlertType.ERROR, "Game Over. You lost!", ButtonType.OK);
+		        a.showAndWait();
+		        stage.setScene(titleScene);
+		    });
+			stage.setScene(titleScene);
+			
 		}
 		
 		// check if we are done with this level
@@ -145,8 +156,14 @@ public class BallWorld extends World {
 					game_won.play();
 					gameOverSoundPlayed = true;
 				}
-				stage.setScene(titleScene);
 				stop();
+				Platform.runLater(() -> {
+			        Alert a = new Alert(AlertType.ERROR, "Congratulations! You Won!", ButtonType.OK);
+			        a.showAndWait();
+			        stage.setScene(titleScene);
+			    });
+				stage.setScene(titleScene);
+				
 			}
 		}
 	}
